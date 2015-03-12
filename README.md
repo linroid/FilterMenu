@@ -6,9 +6,7 @@ This is a library project with a custom view that implements  concept of  Filter
  - Screenshots
     ![Screenshot1](screenshots/device-2015-03-12-215100.png)
  - Youtube Video
- 
-    <iframe width="420" height="315" src="https://www.youtube.com/embed/HClK9Ams6gM" frameborder="0" allowfullscreen></iframe>
-
+    [![Youtube Video](http://img.youtube.com/vi/HClK9Ams6gM/0.jpg)](http://www.youtube.com/watch?v=HClK9Ams6gM)
 ## Futures
  - Easy to set it's position
  - Detect edge automatically
