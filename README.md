@@ -14,6 +14,7 @@ This is a library project with a custom view that implements  concept of  Filter
 ## Futures
  - Easy to set it's position
  - Detect edge automatically
+ 
 ## Getting Started
  - Download the source to use it as library project.
  - Declare FilterMenuLayout inside your layout
