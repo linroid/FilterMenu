@@ -3,4 +3,5 @@
 .DS_Store
 /build
 .idea
-.iml
+*.iml
+library/signing.properties
