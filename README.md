@@ -4,7 +4,8 @@ This is a library project with a custom view that implements  concept of  Filter
 ## Quick Overview
  - Download sample [Apk](sample/sample-release.apk)
  - Screenshots
-    ![Screenshot1](screenshots/device-2015-03-12-215100.png)
+ 
+    <img src="screenshots/device-2015-03-12-215100.png" alt="screenshot" title="screenshot" style="max-height:500px" />
  - Youtube Video
  
      [![Youtube Video](http://img.youtube.com/vi/HClK9Ams6gM/0.jpg)](http://www.youtube.com/watch?v=HClK9Ams6gM)
