@@ -25,7 +25,8 @@ This is a library project with a custom view that implements  concept of  Filter
     custom:expandedRadius 
     <!--circle radius size when menu collapsed-->
     custom:collapsedRadius
-    <!--set the position of circle, the menu will auto align. You should only set two directions at most.-->
+    <!--set the position of circle, the menu will auto align.
+     You should only set two directions at most.-->
     custom:center[Left|Top|Right|Bottom]
     <!--primary color-->
     custom:primaryColor
@@ -35,8 +36,6 @@ This is a library project with a custom view that implements  concept of  Filter
  - Initial menu items via java code
     ```java
     FilterMenuLayout layout = (FilterMenuLayout) findViewById(R.id.filter_menu);
-            attachMenu2(layout);
-            
     FilterMenu menu = new FilterMenu.Builder(this)
         .addItem(R.drawable...)
         .addItem(R.drawable...)
@@ -54,6 +53,7 @@ This is a library project with a custom view that implements  concept of  Filter
         })
         .build();
     ```
+    
 ## License
 Copyright 2015 linroid
 
