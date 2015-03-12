@@ -28,7 +28,6 @@ import android.view.animation.OvershootInterpolator;
 import java.util.ArrayList;
 import java.util.List;
 
-import hugo.weaving.DebugLog;
 
 /**
  * Created by linroid on 15/3/4.
@@ -89,14 +88,12 @@ public class FilterMenuLayout extends ViewGroup{
         init(context, attrs);
     }
 
-    @DebugLog
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public FilterMenuLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
     }
 
-    @DebugLog
     private void init(Context ctx, AttributeSet attrs) {
         Log.i(TAG, "init");
         float density = getResources().getDisplayMetrics().density;
@@ -185,7 +182,6 @@ public class FilterMenuLayout extends ViewGroup{
         invalidate();
     }
 
-    @DebugLog
     void collapse(boolean animate) {
         state = STATE_COLLAPSE;
         for(int i=0; i<getChildCount(); i++){
@@ -197,7 +193,6 @@ public class FilterMenuLayout extends ViewGroup{
         }
     }
 
-    @DebugLog
     void expand(boolean animate) {
         state = STATE_EXPAND;
         for(int i=0; i<getChildCount(); i++){
@@ -210,7 +205,6 @@ public class FilterMenuLayout extends ViewGroup{
             setItemsAlpha(1f);
         }
     }
-    @DebugLog
     void toggle(boolean animate) {
         if (state== STATE_COLLAPSE) {
             expand(animate);
@@ -219,7 +213,6 @@ public class FilterMenuLayout extends ViewGroup{
         }
     }
 
-    @DebugLog
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -241,7 +234,6 @@ public class FilterMenuLayout extends ViewGroup{
         return who==drawable || super.verifyDrawable(who);
     }
 
-    @DebugLog
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
@@ -265,7 +257,6 @@ public class FilterMenuLayout extends ViewGroup{
     Point touchPoint = new Point();
     boolean inChild = false;
     FilterMenu.Item touchedItem;
-    @DebugLog
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         touchPoint.set((int) event.getX(), (int) event.getY());
@@ -363,7 +354,6 @@ public class FilterMenuLayout extends ViewGroup{
 
     }
 
-    @DebugLog
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -641,7 +631,6 @@ public class FilterMenuLayout extends ViewGroup{
      * @param offsetRatio
      * @return
      */
-    @DebugLog
     public static boolean inArea(Point point, Rect area, float offsetRatio){
         int offset = (int) (area.width()*offsetRatio);
         return point.x>=area.left-offset && point.x<=area.right+offset &&

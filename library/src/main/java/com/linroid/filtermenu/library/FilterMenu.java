@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import java.util.ArrayList;
 import java.util.List;
 
-import hugo.weaving.DebugLog;
 
 /**
  * Created by linroid on 15/3/8.
@@ -44,7 +43,6 @@ public class FilterMenu  implements IMenu{
         this.listener = listener;
         for (final Item item : getItems()) {
             item.getView().setOnClickListener(new View.OnClickListener() {
-                @DebugLog
                 @Override
                 public void onClick(View v) {
                     if (getListener() != null) {
