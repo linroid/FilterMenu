@@ -7,6 +7,7 @@ This is a library project with a custom view that implements  concept of  Filter
 ## Getting Started
  - Download the source to use it as library project.
  - Declare FilterMenuLayout inside your layout
+ 
     ```xml
     <com.linroid.filtermenu.library.FilterMenuLayout
         android:id="@+id/filter_menu"
@@ -26,7 +27,7 @@ This is a library project with a custom view that implements  concept of  Filter
     <!--circle radius size when menu collapsed-->
     custom:collapsedRadius
     <!--set the position of circle, the menu will auto align.
-     You should only set two directions at most.-->
+        You should only set two directions at most.-->
     custom:center[Left|Top|Right|Bottom]
     <!--primary color-->
     custom:primaryColor
@@ -34,6 +35,7 @@ This is a library project with a custom view that implements  concept of  Filter
     custom:primaryDarkColor
     ```
  - Initial menu items via java code
+ 
     ```java
     FilterMenuLayout layout = (FilterMenuLayout) findViewById(R.id.filter_menu);
     FilterMenu menu = new FilterMenu.Builder(this)
