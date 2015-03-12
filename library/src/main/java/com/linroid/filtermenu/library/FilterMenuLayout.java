@@ -65,7 +65,7 @@ public class FilterMenuLayout extends ViewGroup{
     private float expandProgress = 0;
     private FilterMenuDrawable drawable;
 
-    ObjectAnimator expandAnimator;
+    ObjectAnimator circleAnimator;
     ValueAnimator colorAnimator;
 
     double fromAngle;
@@ -142,9 +142,9 @@ public class FilterMenuLayout extends ViewGroup{
         }
         drawable = new FilterMenuDrawable(ctx, Color.WHITE, collapsedRadius);
         menuBounds = new Rect();
-        expandAnimator = ObjectAnimator.ofFloat(this, "expandProgress", 0, 0);
-        expandAnimator.setInterpolator(new OvershootInterpolator());
-        expandAnimator.setDuration(DURATION);
+        circleAnimator = ObjectAnimator.ofFloat(this, "expandProgress", 0, 0);
+        circleAnimator.setInterpolator(new OvershootInterpolator());
+        circleAnimator.setDuration(DURATION);
 
         colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), primaryColor, primaryDarkColor);
         colorAnimator.setDuration(DURATION);
@@ -189,6 +189,9 @@ public class FilterMenuLayout extends ViewGroup{
         if(animate){
             startCollapseAnimation();
         }
+        if(menu!=null && menu.getListener()!=null){
+            menu.getListener().onMenuCollapse();
+        }
     }
 
     void expand(boolean animate) {
@@ -201,6 +204,9 @@ public class FilterMenuLayout extends ViewGroup{
             startExpandAnimation();
         } else {
             setItemsAlpha(1f);
+        }
+        if(menu!=null && menu.getListener()!=null){
+            menu.getListener().onMenuExpand();
         }
     }
     void toggle(boolean animate) {
@@ -365,13 +371,12 @@ public class FilterMenuLayout extends ViewGroup{
 
     void startExpandAnimation() {
         //animate circle
-        expandAnimator.setFloatValues(getExpandProgress(), 1f);
-        expandAnimator.start();
+        circleAnimator.setFloatValues(getExpandProgress(), 1f);
+        circleAnimator.start();
 
         //animate color
         colorAnimator.setObjectValues(colorAnimator.getAnimatedValue() == null ? primaryColor : colorAnimator.getAnimatedValue(), primaryDarkColor);
         colorAnimator.start();
-
         //animate menu item
         int delay = 100;
         for (int i = 0; i < getChildCount(); i++) {
@@ -390,8 +395,8 @@ public class FilterMenuLayout extends ViewGroup{
     }
     void startCollapseAnimation() {
         //animate circle
-        expandAnimator.setFloatValues(getExpandProgress(), 0f);
-        expandAnimator.start();
+        circleAnimator.setFloatValues(getExpandProgress(), 0f);
+        circleAnimator.start();
 
         //animate color
         colorAnimator.setObjectValues(colorAnimator.getAnimatedValue()==null ? primaryDarkColor : colorAnimator.getAnimatedValue(), primaryColor);
