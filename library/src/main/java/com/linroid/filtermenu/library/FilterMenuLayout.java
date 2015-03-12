@@ -17,6 +17,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -46,8 +48,8 @@ public class FilterMenuLayout extends ViewGroup{
     //arc radius when menu is expanded
     private int expandedRadius;
 
-    int primaryColor;
-    int primaryDarkColor;
+    private int primaryColor;
+    private int primaryDarkColor;
 
     private Point center;
     private int state = STATE_COLLAPSE;
@@ -125,7 +127,6 @@ public class FilterMenuLayout extends ViewGroup{
         }
         center = new Point();
         center.set(collapsedRadius, expandedRadius);
-
 
         if (collapsedRadius > expandedRadius) {
             throw new IllegalArgumentException("expandedRadius must bigger than collapsedRadius");
@@ -364,16 +365,6 @@ public class FilterMenuLayout extends ViewGroup{
         drawable.draw(canvas);
     }
 
-
-    public void setPrimaryColor(int color) {
-        primaryPaint.setColor(color);
-        invalidate();
-    }
-
-    public void setPrimaryDarkColor(int color) {
-        primaryDarkPaint.setColor(color);
-        invalidate();
-    }
 
     void startExpandAnimation() {
         //animate circle
@@ -673,6 +664,116 @@ public class FilterMenuLayout extends ViewGroup{
         this.menu = menu;
     }
 
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        this.setExpandProgress(ss.expandProgress);
+        this.setPrimaryColor(ss.primaryColor);
+        this.setPrimaryDarkColor(ss.primaryDarkColor);
+        this.setCollapsedRadius(ss.collapsedRadius);
+        this.setExpandedRadius(ss.collapsedRadius);
+        this.state = ss.state;
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        SavedState ss = new SavedState(super.onSaveInstanceState());
+        ss.expandProgress = getExpandProgress();
+        ss.primaryColor = getPrimaryColor();
+        ss.primaryDarkColor = getPrimaryDarkColor();
+        ss.collapsedRadius = getCollapsedRadius();
+        ss.expandedRadius = getExpandedRadius();
+        ss.state = getState();
+        return ss;
+    }
+
+
+    public int getExpandedRadius() {
+        return expandedRadius;
+    }
+
+    public int getCollapsedRadius() {
+        return collapsedRadius;
+    }
+
+    public void setCollapsedRadius(int collapsedRadius) {
+        this.collapsedRadius = collapsedRadius;
+    }
+
+    public void setExpandedRadius(int expandedRadius) {
+        this.expandedRadius = expandedRadius;
+    }
+
+    public void setPrimaryColor(int color) {
+        this.primaryColor = color;
+        primaryPaint.setColor(primaryColor);
+        invalidate();
+    }
+
+    public void setPrimaryDarkColor(int color) {
+        this.primaryDarkColor = color;
+        primaryDarkPaint.setColor(color);
+        invalidate();
+    }
+    public int getPrimaryColor() {
+        return primaryColor;
+    }
+
+    public int getPrimaryDarkColor() {
+        return primaryDarkColor;
+    }
+
+    static class SavedState extends BaseSavedState{
+
+        public float expandProgress;
+        public int primaryColor;
+        public int primaryDarkColor;
+        public int collapsedRadius;
+        public int expandedRadius;
+        public int state;
+
+        public SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeFloat(this.expandProgress);
+            dest.writeInt(this.primaryColor);
+            dest.writeInt(this.primaryDarkColor);
+            dest.writeInt(this.collapsedRadius);
+            dest.writeInt(this.expandedRadius);
+            dest.writeInt(this.state);
+        }
+
+        private SavedState(Parcel in) {
+            super(in);
+            this.expandProgress = in.readFloat();
+            this.primaryColor = in.readInt();
+            this.primaryDarkColor = in.readInt();
+            this.collapsedRadius = in.readInt();
+            this.expandedRadius = in.readInt();
+            this.state = in.readInt();
+        }
+
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel source) {
+                return new SavedState(source);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
+
+    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public class OvalOutline extends ViewOutlineProvider {
