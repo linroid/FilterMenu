@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@android:color/transparent" android:state_pressed="false">
+        <objectAnimator
+            android:duration="@android:integer/config_shortAnimTime"
+            android:propertyName="translationZ"
+            android:valueFrom="4dp"
+            android:valueTo="0dp"
+            android:valueType="floatType" />
+    </item>
+    <item android:drawable="@drawable/bg_circle_pressed" android:state_pressed="true">
+        <objectAnimator
+            android:duration="@android:integer/config_shortAnimTime"
+            android:propertyName="translationZ"
+            android:valueFrom="0dp"
+            android:valueTo="4dp"
+            android:valueType="floatType" />
+    </item>
+    <item android:drawable="@drawable/bg_circle_pressed" android:state_focused="true"/>
+</selector>

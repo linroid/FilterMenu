@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <com.linroid.filtermenu.library.FilterMenuLayout
+        android:id="@+id/filter_menu1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="8dp"
+        app:expandedRadius="96dp"
+        app:collapsedRadius="24dp"
+        app:centerTop="250dp"
+        app:centerRight="200dp"
+        app:primaryColor="#ff636363"
+        app:primaryDarkColor="#ff292929">
+    </com.linroid.filtermenu.library.FilterMenuLayout>
+
+    <com.linroid.filtermenu.library.FilterMenuLayout
+        android:id="@+id/filter_menu2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="8dp"
+        app:expandedRadius="96dp"
+        app:collapsedRadius="24dp"
+        app:centerTop="100dp"
+        app:centerLeft="48dp"
+        app:primaryColor="#ff3163"
+        app:primaryDarkColor="#ce3d68">
+        </com.linroid.filtermenu.library.FilterMenuLayout>
+
+    <com.linroid.filtermenu.library.FilterMenuLayout
+        android:id="@+id/filter_menu3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="8dp"
+        app:expandedRadius="96dp"
+        app:collapsedRadius="24dp"
+        app:centerBottom="50dp"
+        app:centerRight="50dp"
+        app:primaryColor="#ff37aa4a"
+        app:primaryDarkColor="#ff20622b">
+    </com.linroid.filtermenu.library.FilterMenuLayout>
+</RelativeLayout>

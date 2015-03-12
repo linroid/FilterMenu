@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FilterMenuLayout">
+        <attr name="primaryColor" format="color|reference"/>
+        <attr name="primaryDarkColor" format="color|reference"/>
+        <attr name="expandedRadius" format="dimension"/>
+        <attr name="collapsedRadius" format="dimension"/>
+        <attr name="centerLeft" format="dimension"/>
+        <attr name="centerRight" format="dimension"/>
+        <attr name="centerTop" format="dimension"/>
+        <attr name="centerBottom" format="dimension"/>
+        <attr name="sweepAngle" format="integer"/>
+    </declare-styleable>
+</resources>
