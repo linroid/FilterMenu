@@ -2,7 +2,7 @@
 This is a library project with a custom view that implements  concept of  Filter Menu(https://dribbble.com/shots/1956586-Filter-Menu) made by  Anton Aheichanka for android
 
 ## Quick Overview
- - Download sample [Apk](sample/sample-release.apk)
+ - Download sample [Apk](https://github.com/linroid/FilterMenu/blob/master/sample/sample-release.apk?raw=true)
  
  - Screenshots
  
