@@ -378,7 +378,7 @@ public class FilterMenuLayout extends ViewGroup{
         colorAnimator.setObjectValues(colorAnimator.getAnimatedValue() == null ? primaryColor : colorAnimator.getAnimatedValue(), primaryDarkColor);
         colorAnimator.start();
         //animate menu item
-        int delay = 100;
+        int delay = DURATION_BETWEEN_ITEM;
         for (int i = 0; i < getChildCount(); i++) {
             getChildAt(i).animate()
                     .setStartDelay(delay)
@@ -403,7 +403,7 @@ public class FilterMenuLayout extends ViewGroup{
         colorAnimator.start();
 
         //animate menu item
-        int delay = 100;
+        int delay = DURATION_BETWEEN_ITEM;
         for (int i = getChildCount()-1; i >= 0; i--) {
             getChildAt(i).animate()
                     .setStartDelay(delay)
