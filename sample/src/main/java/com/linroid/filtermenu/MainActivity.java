@@ -94,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_github) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("http://github.com/linroid/"));
+            intent.setData(Uri.parse("https://github.com/linroid/FilterMenu"));
             startActivity(Intent.createChooser(intent, null));
             return true;
         }
