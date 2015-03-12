@@ -68,9 +68,6 @@ public class FilterMenuLayout extends ViewGroup{
     ObjectAnimator expandAnimator;
     ValueAnimator colorAnimator;
 
-    /**
-     * TODO：自动检测角度
-     */
     double fromAngle;
     double toAngle;
     private FilterMenu menu;
