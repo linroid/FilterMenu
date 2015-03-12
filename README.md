@@ -2,8 +2,16 @@
 This is a library project with a custom view that implements  concept of  Filter Menu(https://dribbble.com/shots/1956586-Filter-Menu) made by  Anton Aheichanka for android
 
 ## Quick Overview
+ - Download sample [Apk](sample/sample-release.apk)
  - Screenshots
+    ![Screenshot1](screenshots/device-2015-03-12-215100.png)
+ - Youtube Video
+ 
+    <iframe width="420" height="315" src="https://www.youtube.com/embed/HClK9Ams6gM" frameborder="0" allowfullscreen></iframe>
 
+## Futures
+ - Easy to set it's position
+ - Detect edge automatically
 ## Getting Started
  - Download the source to use it as library project.
  - Declare FilterMenuLayout inside your layout
