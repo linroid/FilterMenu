@@ -12,7 +12,6 @@ This is a library project with a custom view that implements  concept of  Filter
      [![Youtube Video](http://img.youtube.com/vi/HClK9Ams6gM/0.jpg)](http://www.youtube.com/watch?v=HClK9Ams6gM)
      
 ## Futures
- - Easy to set it's position
  - Detect edge automatically
  
 ## Getting Started

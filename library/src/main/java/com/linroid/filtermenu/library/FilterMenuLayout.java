@@ -269,12 +269,14 @@ public class FilterMenuLayout extends ViewGroup{
     Point touchPoint = new Point();
     boolean inChild = false;
     FilterMenu.Item touchedItem;
+    boolean isExpand = false;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         touchPoint.set((int) event.getX(), (int) event.getY());
         int action = event.getActionMasked();
         switch (action){
             case MotionEvent.ACTION_DOWN: {
+                isExpand = false;
                 double distance = pointsDistance(touchPoint, center);
                 if(distance > (collapsedRadius+(expandedRadius-collapsedRadius)*expandProgress)){
                     if(state == STATE_EXPAND){
@@ -283,7 +285,10 @@ public class FilterMenuLayout extends ViewGroup{
                     }
                     return false;
                 }else{
-                    toggle(true);
+                    if(state==STATE_COLLAPSE){
+                        expand(true);
+                        isExpand = true;
+                    }
                     return true;
                 }
             }
@@ -318,6 +323,10 @@ public class FilterMenuLayout extends ViewGroup{
                     }
                     touchedItem.getView().setPressed(false);
                     inChild = false;
+                }
+                if(!isExpand){
+                    collapse(true);
+                    return true;
                 }
                 double distance = pointsDistance(touchPoint, center);
                 if(distance > (collapsedRadius+(expandedRadius-collapsedRadius)*expandProgress)){
