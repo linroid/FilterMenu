@@ -22,14 +22,14 @@ This is a library project with a custom view that implements  concept of  Filter
  <dependency>
    <groupId>com.linroid.filtermenu</groupId>
    <artifactId>library</artifactId>
-   <version>0.1.0</version>
+   <version>0.1.1</version>
    <type>aar</type>
  </dependency>
  ```
  or Gradle
  
  ```
- compile 'com.linroid.filtermenu:library:0.1.0@aar'
+ compile 'com.linroid.filtermenu:library:0.1.1@aar'
  ```
  - Declare FilterMenuLayout inside your layout
  
