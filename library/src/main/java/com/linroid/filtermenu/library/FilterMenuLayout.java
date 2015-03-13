@@ -42,25 +42,35 @@ public class FilterMenuLayout extends ViewGroup{
     public static final int DURATION = 400;
     private static final int DURATION_BETWEEN_ITEM = 50;
 
-    //arc radius when menu is collapsed
+    /** arc radius when menu is collapsed **/
     private int collapsedRadius;
-    //arc radius when menu is expanded
+    /** arc radius when menu is expanded **/
     private int expandedRadius;
 
     private int primaryColor;
+    /** color of inner circle when menu expanded **/
     private int primaryDarkColor;
 
+    /**
+     * center of circle
+     */
     private Point center;
     private int state = STATE_COLLAPSE;
     private Paint primaryPaint;
     private Paint primaryDarkPaint;
 
     private OvalOutline outlineProvider;
+    /**the expanded circle bounds**/
     private Rect menuBounds;
+    /**
+     * set the circle position, base on its center , the menu will auto align.You should only set two directions at most.
+     */
     private int centerLeft, centerRight, centerTop, centerBottom;
 
+    /** all intersect points **/
     private List<Point> intersectPoints = new ArrayList<>();
 
+    /** expand progress **/
     private float expandProgress = 0;
     private FilterMenuDrawable drawable;
 
