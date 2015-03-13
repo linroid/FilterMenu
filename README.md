@@ -16,7 +16,21 @@ This is a library project with a custom view that implements  concept of  Filter
  - Detect edge automatically
  
 ## Getting Started
- - Download the source to use it as library project.
+ - Download the source to use it as library project, or grab via Maven
+ - 
+ ```xml
+ <dependency>
+   <groupId>com.linroid.filtermenu</groupId>
+   <artifactId>library</artifactId>
+   <version>0.1.0</version>
+   <type>aar</type>
+ </dependency>
+ ```
+ or Gradle
+ 
+ ```
+ compile 'com.linroid.filtermenu:library:0.1.0@aar'
+ ```
  - Declare FilterMenuLayout inside your layout
  
     ```xml
