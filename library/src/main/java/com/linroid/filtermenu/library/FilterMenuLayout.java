@@ -20,7 +20,6 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +93,6 @@ public class FilterMenuLayout extends ViewGroup{
     }
 
     private void init(Context ctx, AttributeSet attrs) {
-        Log.i(TAG, "init");
         float density = getResources().getDisplayMetrics().density;
         TypedArray ta = ctx.getResources().obtainAttributes(attrs, R.styleable.FilterMenuLayout);
         int defaultCollapsedRadius = (int) (65 / 2.f * density + 0.5);
@@ -513,18 +511,28 @@ public class FilterMenuLayout extends ViewGroup{
             return;
         }
         int indexA = size - 1;
-//        double maxDistance = pointsDistance(intersectPoints.get(0), intersectPoints.get(indexA));
         double maxAngle = arcAngle(center, intersectPoints.get(0), intersectPoints.get(indexA), menuBounds, expandedRadius);
         for (int i = 0; i < size - 1; i++) {
             Point a = intersectPoints.get(i);
-            Point b = intersectPoints.get(i+1);
-//            double distance = pointsDistance(intersectPoints.get(i), intersectPoints.get(i + 1));
-//            if (distance > maxDistance) {
-//                indexA = i;
-//                maxDistance = distance;
-//            }
+            Point b = intersectPoints.get(i + 1);
             double angle = arcAngle(center, a, b, menuBounds, expandedRadius);
-            if (angle > maxAngle) {
+            Point midnormalPoint = findMidnormalPoint(center, a, b, menuBounds, expandedRadius);
+
+            //if the arc(a->midnormalPoint->b) is in menuBounds and the angle is bigger, select it
+            int pointerIndex = i;
+            int endIndex = indexA+1;
+            if(!isClockwise(center, a, midnormalPoint)){
+                int tmpIndex = pointerIndex;
+                pointerIndex = endIndex;
+                endIndex = tmpIndex;
+            }
+            if(pointerIndex==intersectPoints.size()-1){
+                pointerIndex = 0;
+            }else{
+                pointerIndex++;
+            }
+
+            if(pointerIndex==endIndex && angle > maxAngle){
                 indexA = i;
                 maxAngle = angle;
             }
@@ -532,12 +540,10 @@ public class FilterMenuLayout extends ViewGroup{
 
         Point a = intersectPoints.get(indexA);
         Point b = intersectPoints.get(indexA + 1 >= size ? 0 : indexA + 1);
-        Point midNormalPoint = findMidNormalPoint(center, a, b, menuBounds, expandedRadius);
+        Point midnormalPoint = findMidnormalPoint(center, a, b, menuBounds, expandedRadius);
 
-        //make sure a->midNormalPoint is ordered clockwise
-        double cross = (a.x-center.x)*(midNormalPoint.y-center.y)-(midNormalPoint.x-center.x)*(a.y-center.y);
         Point x = new Point(menuBounds.right, center.y);
-        if(cross<0){
+        if(!isClockwise(center, a, midnormalPoint)){
             Point tmp = a;
             a = b;
             b = tmp;
@@ -546,6 +552,18 @@ public class FilterMenuLayout extends ViewGroup{
         fromAngle = pointAngleOnCircle(center, a, x);
         toAngle = pointAngleOnCircle(center, b, x);
         toAngle = toAngle <= fromAngle ? 360+toAngle : toAngle;
+    }
+
+    /**
+     * judge a->b is ordered clockwise
+     * @param center
+     * @param a
+     * @param b
+     * @return
+     */
+    private boolean isClockwise(Point center, Point a, Point b){
+        double cross = (a.x-center.x)*(b.y-center.y)-(b.x-center.x)*(a.y-center.y);
+        return cross>0;
     }
 
     /**
@@ -559,7 +577,7 @@ public class FilterMenuLayout extends ViewGroup{
      */
     private static double arcAngle(Point center, Point a, Point b, Rect area, int radius){
         double angle = threePointsAngle(center, a, b);
-        Point innerPoint = findMidNormalPoint(center, a, b, area, radius);
+        Point innerPoint = findMidnormalPoint(center, a, b, area, radius);
         Point midInsectPoint = new Point((a.x+b.x)/2, (a.y+b.y)/2);
         double distance = pointsDistance(midInsectPoint, innerPoint);
         if(distance>radius){
@@ -577,7 +595,7 @@ public class FilterMenuLayout extends ViewGroup{
      * @param radius
      * @return
      */
-    private static Point findMidNormalPoint(Point center, Point a, Point b, Rect area, int radius){
+    private static Point findMidnormalPoint(Point center, Point a, Point b, Rect area, int radius){
         if(a.y==b.y){
             //top
             if(a.y<center.y){
