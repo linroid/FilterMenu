@@ -11,8 +11,8 @@
         android:elevation="8dp"
         app:expandedRadius="96dp"
         app:collapsedRadius="24dp"
-        app:centerTop="250dp"
-        app:centerRight="200dp"
+        app:centerHorizontal="true"
+        app:centerVertical="true"
         app:primaryColor="#ff636363"
         app:primaryDarkColor="#ff292929">
     </com.linroid.filtermenu.library.FilterMenuLayout>
