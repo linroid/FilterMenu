@@ -29,6 +29,9 @@ public class MainActivity extends ActionBarActivity {
 
         FilterMenuLayout layout3 = (FilterMenuLayout) findViewById(R.id.filter_menu3);
         attachMenu3(layout3);
+
+        FilterMenuLayout layout4 = (FilterMenuLayout) findViewById(R.id.filter_menu4);
+        attachMenu4(layout4);
     }
     private FilterMenu attachMenu1(FilterMenuLayout layout){
         return new FilterMenu.Builder(this)
@@ -72,6 +75,12 @@ public class MainActivity extends ActionBarActivity {
                 .addItem(R.drawable.ic_action_add)
                 .addItem(R.drawable.ic_action_clock)
                 .addItem(R.drawable.ic_action_location_2)
+                .attach(layout)
+                .build();
+    }
+    private FilterMenu attachMenu4(FilterMenuLayout layout){
+        return new FilterMenu.Builder(this)
+                .inflate(R.menu.menu_filter)
                 .attach(layout)
                 .build();
     }

@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,6 +21,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +35,7 @@ import java.util.List;
 /**
  * Created by linroid on 15/3/4.
  */
-public class FilterMenuLayout extends ViewGroup{
+public class FilterMenuLayout extends ViewGroup {
     public static final String TAG = "FilterMenuLayout";
 
     public static final int STATE_COLLAPSE = 0x1;
@@ -66,20 +68,32 @@ public class FilterMenuLayout extends ViewGroup{
      * set the circle position, base on its center , the menu will auto align.You should only set two directions at most.
      */
     private int centerLeft, centerRight, centerTop, centerBottom;
+    /** If true, centers the circle horizontally. */
+    private boolean centerHorizontal;
+    /** If true, centers the circle vertically. **/
+    private boolean centerVertical;
 
     /** all intersect points **/
     private List<Point> intersectPoints = new ArrayList<>();
 
     /** expand progress **/
     private float expandProgress = 0;
+    /**
+     * the center drawable
+     * TODO: add more drawable
+     */
     private FilterMenuDrawable drawable;
 
-    ObjectAnimator circleAnimator;
-    ValueAnimator colorAnimator;
+    private ObjectAnimator circleAnimator;
+    private ValueAnimator colorAnimator;
 
+    /** menu items position start angle**/
     double fromAngle;
+    /** menu items position end angle **/
     double toAngle;
+
     private FilterMenu menu;
+
 
     public FilterMenuLayout(Context context) {
         super(context);
@@ -115,21 +129,28 @@ public class FilterMenuLayout extends ViewGroup{
         centerRight = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_centerRight, 0);
         centerTop = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_centerTop, 0);
         centerBottom = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_centerBottom, 0);
+        centerHorizontal = ta.getBoolean(R.styleable.FilterMenuLayout_centerHorizontal, false);
+        centerVertical = ta.getBoolean(R.styleable.FilterMenuLayout_centerVertical, false);
 
         primaryColor = ta.getColor(R.styleable.FilterMenuLayout_primaryColor, getResources().getColor(android.R.color.holo_blue_bright));
         primaryDarkColor = ta.getColor(R.styleable.FilterMenuLayout_primaryDarkColor, getResources().getColor(android.R.color.holo_blue_dark));
         ta.recycle();
 
-        centerLeft = centerLeft!=0 && centerLeft<collapsedRadius ? collapsedRadius : centerLeft;
-        centerTop = centerTop!=0 && centerTop<collapsedRadius ? collapsedRadius : centerTop;
-        centerRight = centerRight!=0 && centerRight<collapsedRadius ? collapsedRadius : centerRight;
-        centerBottom = centerBottom!=0 && centerBottom<collapsedRadius ? collapsedRadius : centerBottom;
-        if (centerLeft == 0 && centerRight == 0) {
-            centerLeft = collapsedRadius;
+        if(!centerHorizontal){
+            centerLeft = centerLeft!=0 && centerLeft<collapsedRadius ? collapsedRadius : centerLeft;
+            centerRight = centerRight!=0 && centerRight<collapsedRadius ? collapsedRadius : centerRight;
+            if (centerLeft == 0 && centerRight == 0) {
+                centerLeft = collapsedRadius;
+            }
         }
-        if (centerTop == 0 && centerBottom == 0) {
-            centerTop = collapsedRadius;
+        if(!centerVertical){
+            centerTop = centerTop!=0 && centerTop<collapsedRadius ? collapsedRadius : centerTop;
+            centerBottom = centerBottom!=0 && centerBottom<collapsedRadius ? collapsedRadius : centerBottom;
+            if (centerTop == 0 && centerBottom == 0) {
+                centerTop = collapsedRadius;
+            }
         }
+
         center = new Point();
         center.set(collapsedRadius, expandedRadius);
 
@@ -169,12 +190,17 @@ public class FilterMenuLayout extends ViewGroup{
     protected void onFinishInflate() {
         super.onFinishInflate();
         if(getChildCount()>0){
-            throw new IllegalStateException("you should not add  any child view tag ");
+            throw new IllegalStateException("should not add any child view to FilterMenuLayout ");
         }
     }
 
     public float getExpandProgress() {
         return expandProgress;
+    }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     public void setExpandProgress(float progress) {
@@ -193,7 +219,7 @@ public class FilterMenuLayout extends ViewGroup{
         for(int i=0; i<getChildCount(); i++){
             getChildAt(i).setVisibility(View.GONE);
         }
-        requestLayout();
+        invalidate();
         if(animate){
             startCollapseAnimation();
         }
@@ -207,7 +233,7 @@ public class FilterMenuLayout extends ViewGroup{
         for(int i=0; i<getChildCount(); i++){
             getChildAt(i).setVisibility(View.VISIBLE);
         }
-        requestLayout();
+        invalidate();
         if (animate) {
             startExpandAnimation();
         } else {
@@ -354,12 +380,21 @@ public class FilterMenuLayout extends ViewGroup{
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        Log.d(TAG, "onSizeChanged: "+w + ", " + h);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setOutlineProvider(outlineProvider);
         }
         int x, y;
-        x = centerLeft != 0 ? centerLeft : w - centerRight;
-        y = centerTop != 0 ? centerTop : h - centerBottom;
+        if(centerHorizontal) {
+            x = w/2 + centerLeft - centerRight;
+        }else{
+            x = centerLeft != 0 ? centerLeft : w - centerRight;
+        }
+        if(centerVertical){
+            y = h/2 + centerTop - centerBottom;
+        }else{
+            y = centerTop != 0 ? centerTop : h - centerBottom;
+        }
         center.set(x, y);
 
         int left = Math.max(getPaddingLeft(), center.x - expandedRadius);
@@ -715,8 +750,12 @@ public class FilterMenuLayout extends ViewGroup{
         this.setPrimaryColor(ss.primaryColor);
         this.setPrimaryDarkColor(ss.primaryDarkColor);
         this.setCollapsedRadius(ss.collapsedRadius);
-        this.setExpandedRadius(ss.collapsedRadius);
-        this.state = ss.state;
+        this.setExpandedRadius(ss.expandedRadius);
+        if(ss.state == STATE_COLLAPSE){
+            collapse(false);
+        }else {
+            expand(false);
+        }
     }
 
     @Override
@@ -728,6 +767,7 @@ public class FilterMenuLayout extends ViewGroup{
         ss.collapsedRadius = getCollapsedRadius();
         ss.expandedRadius = getExpandedRadius();
         ss.state = getState();
+
         return ss;
     }
 
@@ -742,10 +782,12 @@ public class FilterMenuLayout extends ViewGroup{
 
     public void setCollapsedRadius(int collapsedRadius) {
         this.collapsedRadius = collapsedRadius;
+        requestLayout();
     }
 
     public void setExpandedRadius(int expandedRadius) {
         this.expandedRadius = expandedRadius;
+        requestLayout();
     }
 
     public void setPrimaryColor(int color) {

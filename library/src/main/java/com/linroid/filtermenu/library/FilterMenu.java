@@ -6,8 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +107,19 @@ public class FilterMenu  implements IMenu{
 
         public Builder withListener(OnMenuChangeListener listener){
             this.listener = listener;
+            return this;
+        }
+        public Builder inflate(int menuResId) {
+            PopupMenu popupMenu = new PopupMenu(ctx, null);
+            popupMenu.inflate(menuResId);
+            Menu menu = popupMenu.getMenu();
+            for (int i = 0; i < menu.size(); i++) {
+                MenuItem item = menu.getItem(i);
+                addItem(item.getIcon());
+            }
+            menu.clear();
+            menu = null;
+            popupMenu = null;
             return this;
         }
         public Builder addItem(Drawable icon){

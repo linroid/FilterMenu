@@ -11,8 +11,9 @@
         android:elevation="8dp"
         app:expandedRadius="96dp"
         app:collapsedRadius="24dp"
-        app:centerTop="250dp"
-        app:centerRight="200dp"
+        app:centerHorizontal="true"
+        app:centerVertical="true"
+        app:centerLeft="30dp"
         app:primaryColor="#ff636363"
         app:primaryDarkColor="#ff292929">
     </com.linroid.filtermenu.library.FilterMenuLayout>
@@ -41,5 +42,18 @@
         app:centerRight="50dp"
         app:primaryColor="#ff37aa4a"
         app:primaryDarkColor="#ff20622b">
+    </com.linroid.filtermenu.library.FilterMenuLayout>
+
+    <com.linroid.filtermenu.library.FilterMenuLayout
+        android:id="@+id/filter_menu4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="8dp"
+        app:expandedRadius="96dp"
+        app:collapsedRadius="24dp"
+        app:centerBottom="50dp"
+        app:centerLeft="50dp"
+        app:primaryColor="#ff5791aa"
+        app:primaryDarkColor="#ff334862">
     </com.linroid.filtermenu.library.FilterMenuLayout>
 </RelativeLayout>
