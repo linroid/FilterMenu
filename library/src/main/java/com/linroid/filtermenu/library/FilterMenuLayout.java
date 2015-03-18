@@ -383,12 +383,12 @@ public class FilterMenuLayout extends ViewGroup{
         }
         int x, y;
         if(centerHorizontal) {
-            x = w/2 - centerLeft + centerRight;
+            x = w/2 + centerLeft - centerRight;
         }else{
             x = centerLeft != 0 ? centerLeft : w - centerRight;
         }
         if(centerVertical){
-            y = h/2 - centerTop + centerBottom;
+            y = h/2 + centerTop - centerBottom;
         }else{
             y = centerTop != 0 ? centerTop : h - centerBottom;
         }
