@@ -90,6 +90,7 @@ This is a library project with a custom view that implements  concept of  Filter
  - 0.2.0
     - support for android menu resource
     - support for centerHorizontal and centerVertical attribute
+
 ## License
 Copyright 2015 linroid
 
