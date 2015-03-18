@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Created by linroid on 15/3/4.
  */
-public class FilterMenuLayout extends ViewGroup{
+public class FilterMenuLayout extends ViewGroup {
     public static final String TAG = "FilterMenuLayout";
 
     public static final int STATE_COLLAPSE = 0x1;
@@ -68,7 +68,10 @@ public class FilterMenuLayout extends ViewGroup{
      * set the circle position, base on its center , the menu will auto align.You should only set two directions at most.
      */
     private int centerLeft, centerRight, centerTop, centerBottom;
-    private boolean centerHorizontal, centerVertical;
+    /** If true, centers the circle horizontally. */
+    private boolean centerHorizontal;
+    /** If true, centers the circle vertically. **/
+    private boolean centerVertical;
 
     /** all intersect points **/
     private List<Point> intersectPoints = new ArrayList<>();
@@ -187,7 +190,7 @@ public class FilterMenuLayout extends ViewGroup{
     protected void onFinishInflate() {
         super.onFinishInflate();
         if(getChildCount()>0){
-            throw new IllegalStateException("you should not add  any child view tag ");
+            throw new IllegalStateException("should not add any child view to FilterMenuLayout ");
         }
     }
 
@@ -747,8 +750,12 @@ public class FilterMenuLayout extends ViewGroup{
         this.setPrimaryColor(ss.primaryColor);
         this.setPrimaryDarkColor(ss.primaryDarkColor);
         this.setCollapsedRadius(ss.collapsedRadius);
-        this.setExpandedRadius(ss.collapsedRadius);
-        this.state = ss.state;
+        this.setExpandedRadius(ss.expandedRadius);
+        if(ss.state == STATE_COLLAPSE){
+            collapse(false);
+        }else {
+            expand(false);
+        }
     }
 
     @Override
@@ -760,6 +767,7 @@ public class FilterMenuLayout extends ViewGroup{
         ss.collapsedRadius = getCollapsedRadius();
         ss.expandedRadius = getExpandedRadius();
         ss.state = getState();
+
         return ss;
     }
 
@@ -774,10 +782,12 @@ public class FilterMenuLayout extends ViewGroup{
 
     public void setCollapsedRadius(int collapsedRadius) {
         this.collapsedRadius = collapsedRadius;
+        requestLayout();
     }
 
     public void setExpandedRadius(int expandedRadius) {
         this.expandedRadius = expandedRadius;
+        requestLayout();
     }
 
     public void setPrimaryColor(int color) {

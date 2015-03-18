@@ -13,6 +13,7 @@ This is a library project with a custom view that implements  concept of  Filter
      
 ## Futures
  - Detect edge automatically
+ - support for android menu resource
  
 ## Getting Started
  - Download the source to use it as library project, or grab via Maven
@@ -83,9 +84,7 @@ This is a library project with a custom view that implements  concept of  Filter
 ## ChangeLog
  - 0.2.0
     - support for android menu resource
-    - support for sub-menu items
     - support for centerHorizontal and centerVertical attribute
-    
 ## License
 Copyright 2015 linroid
 
