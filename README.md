@@ -13,7 +13,7 @@ This is a library project with a custom view that implements  concept of  Filter
      
 ## Futures
  - Detect edge automatically
- - support for android menu resource
+ - Support for android menu resource
  
 ## Getting Started
  - Download the source to use it as library project, or grab via Maven
@@ -22,14 +22,14 @@ This is a library project with a custom view that implements  concept of  Filter
  <dependency>
    <groupId>com.linroid.filtermenu</groupId>
    <artifactId>library</artifactId>
-   <version>0.1.1</version>
+   <version>0.2.0</version>
    <type>aar</type>
  </dependency>
  ```
  or Gradle
  
  ```
- compile 'com.linroid.filtermenu:library:0.1.1@aar'
+ compile 'com.linroid.filtermenu:library:0.2.0@aar'
  ```
  - Declare FilterMenuLayout inside your layout
  
@@ -47,6 +47,7 @@ This is a library project with a custom view that implements  concept of  Filter
         custom:primaryDarkColor="#ff20622b">
     </com.linroid.filtermenu.library.FilterMenuLayout>
     
+    
     <!--circle radius size when menu expanded-->
     custom:expandedRadius 
     <!--circle radius size when menu collapsed-->
@@ -54,6 +55,10 @@ This is a library project with a custom view that implements  concept of  Filter
     <!--set the position of circle, the menu will auto align.
         You should only set two directions at most.-->
     custom:center[Left|Top|Right|Bottom]
+    <!-- If true, centers the circle horizontally.-->
+    custom:centerHorizontal
+    <!-- If true, centers the circlevertically.-->
+    custom:centerVertical
     <!--primary color-->
     custom:primaryColor
     <!--color of inner circle when menu expanded-->
