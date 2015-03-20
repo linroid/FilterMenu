@@ -69,8 +69,8 @@ This is a library project with a custom view that implements  concept of  Filter
     ```java
     FilterMenuLayout layout = (FilterMenuLayout) findViewById(R.id.filter_menu);
     FilterMenu menu = new FilterMenu.Builder(this)
-        .addItem(R.drawable...)
-        .addItem(R.drawable...)
+        .addItem(R.drawable....)
+        //.inflate(R.menu....)//inflate  menu resource
         .attach(layout)
         .withListener(new FilterMenu.OnMenuChangeListener() {
             @Override
