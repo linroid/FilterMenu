@@ -1,4 +1,7 @@
 # FilterMenu
+
+[![Maven Central](https://img.shields.io/maven-central/v/com.linroid.filtermenu/library.svg)](http://search.maven.org/#search%7Cga%7C1%7Ccom.linroid.filtermenu)
+
 This is a library project with a custom view that implements  concept of  Filter Menu(https://dribbble.com/shots/1956586-Filter-Menu) made by  Anton Aheichanka for android
 
 ## Quick Overview
@@ -22,7 +25,7 @@ This is a library project with a custom view that implements  concept of  Filter
  <dependency>
    <groupId>com.linroid.filtermenu</groupId>
    <artifactId>library</artifactId>
-   <version>0.2.1</version>
+   <version>{last-version}</version>
    <type>aar</type>
  </dependency>
  ```
