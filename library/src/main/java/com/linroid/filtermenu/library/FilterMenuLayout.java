@@ -118,7 +118,7 @@ public class FilterMenuLayout extends ViewGroup {
 
     private void init(Context ctx, AttributeSet attrs) {
         float density = getResources().getDisplayMetrics().density;
-        TypedArray ta = ctx.getResources().obtainAttributes(attrs, R.styleable.FilterMenuLayout);
+        TypedArray ta = ctx.obtainStyledAttributes(attrs, R.styleable.FilterMenuLayout);
         int defaultCollapsedRadius = (int) (65 / 2.f * density + 0.5);
         int defaultExpandedRadius = (int) (65 * 2 * density + 0.5);
         collapsedRadius = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_collapsedRadius, defaultCollapsedRadius);
