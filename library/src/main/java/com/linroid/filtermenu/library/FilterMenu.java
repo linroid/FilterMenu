@@ -3,8 +3,7 @@ package com.linroid.filtermenu.library;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.util.TypedValue;
-import android.view.ContextThemeWrapper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +18,7 @@ import java.util.List;
 /**
  * Created by linroid on 15/3/8.
  */
-public class FilterMenu  implements IMenu{
+public class FilterMenu implements IMenu {
 
     private List<Item> items = new ArrayList<>();
     private OnMenuChangeListener listener;
@@ -38,6 +37,10 @@ public class FilterMenu  implements IMenu{
         return items;
     }
 
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
     public OnMenuChangeListener getListener() {
         return listener;
     }
@@ -48,11 +51,12 @@ public class FilterMenu  implements IMenu{
             item.getView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.e("FilterMenu", "onClick");
                     if (getListener() != null) {
-                        if(layout!=null){
-                            layout.collapse(true);
-                        }
                         getListener().onMenuItemClick(item.getView(), item.getPosition());
+                    }
+                    if (layout != null) {
+                        layout.collapse(true);
                     }
                 }
             });
@@ -68,6 +72,7 @@ public class FilterMenu  implements IMenu{
     public void expand(boolean animate) {
         layout.expand(animate);
     }
+
     @Override
     public void toggle(boolean animate) {
         layout.toggle(animate);
@@ -76,26 +81,26 @@ public class FilterMenu  implements IMenu{
     @Override
     public void setMenuLayout(FilterMenuLayout view) {
         this.layout = view;
-        if(view==null){
+        if (view == null) {
             return;
         }
-        for (final Item item : getItems()){
+        for (final Item item : getItems()) {
             layout.addView(item.getView());
         }
         layout.setMenu(this);
     }
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
 
-    public static interface OnMenuChangeListener{
+    public static interface OnMenuChangeListener {
         void onMenuItemClick(View view, int position);
+
         void onMenuCollapse();
+
         void onMenuExpand();
     }
-    public static class Builder{
-        private List<Item> items = new ArrayList<>();
+
+    public static class Builder {
         OnMenuChangeListener listener;
+        private List<Item> items = new ArrayList<>();
         private Context ctx;
         private LayoutInflater inflater;
         private FilterMenuLayout layout;
@@ -105,10 +110,11 @@ public class FilterMenu  implements IMenu{
             this.inflater = LayoutInflater.from(ctx);
         }
 
-        public Builder withListener(OnMenuChangeListener listener){
+        public Builder withListener(OnMenuChangeListener listener) {
             this.listener = listener;
             return this;
         }
+
         public Builder inflate(int menuResId) {
             PopupMenu popupMenu = new PopupMenu(ctx, null);
             popupMenu.inflate(menuResId);
@@ -122,7 +128,8 @@ public class FilterMenu  implements IMenu{
             popupMenu = null;
             return this;
         }
-        public Builder addItem(Drawable icon){
+
+        public Builder addItem(Drawable icon) {
             ImageButton view = (ImageButton) inflater.inflate(R.layout.menu_item, null, false);
             view.setImageDrawable(icon);
 //            TypedValue value = new TypedValue();
@@ -131,12 +138,14 @@ public class FilterMenu  implements IMenu{
             addItem(view);
             return this;
         }
-        public Builder addItem(int iconResId){
+
+        public Builder addItem(int iconResId) {
             Drawable icon = ctx.getResources().getDrawable(iconResId);
             addItem(icon);
             return this;
         }
-        public Builder addItem(View customView){
+
+        public Builder addItem(View customView) {
             Item item = new Item();
             item.setView(customView);
             item.setPosition(items.size());
@@ -146,7 +155,7 @@ public class FilterMenu  implements IMenu{
             return this;
         }
 
-        public Builder attach(FilterMenuLayout view){
+        public Builder attach(FilterMenuLayout view) {
             this.layout = view;
             return this;
         }
@@ -159,7 +168,8 @@ public class FilterMenu  implements IMenu{
             return menu;
         }
     }
-    public static class Item{
+
+    public static class Item {
         private View view;
         private int x;
         private int y;
@@ -199,15 +209,16 @@ public class FilterMenu  implements IMenu{
             this.position = position;
         }
 
-        public void setBounds(Rect bounds) {
-            this.bounds = bounds;
-        }
-
         public void setBounds(int left, int top, int right, int bottom) {
             this.bounds.set(left, top, right, bottom);
         }
+
         public Rect getBounds() {
             return bounds;
+        }
+
+        public void setBounds(Rect bounds) {
+            this.bounds = bounds;
         }
     }
 }

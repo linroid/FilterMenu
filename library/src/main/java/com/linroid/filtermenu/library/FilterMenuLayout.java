@@ -43,16 +43,31 @@ public class FilterMenuLayout extends ViewGroup {
 
     public static final int DURATION = 400;
     private static final int DURATION_BETWEEN_ITEM = 50;
-
-    /** arc radius when menu is collapsed **/
+    /**
+     * menu items position start angle*
+     */
+    double fromAngle;
+    /**
+     * menu items position end angle *
+     */
+    double toAngle;
+    Point touchPoint = new Point();
+    boolean inChild = false;
+    FilterMenu.Item touchedItem;
+    boolean isExpand = false;
+    /**
+     * arc radius when menu is collapsed *
+     */
     private int collapsedRadius;
-    /** arc radius when menu is expanded **/
+    /**
+     * arc radius when menu is expanded *
+     */
     private int expandedRadius;
-
     private int primaryColor;
-    /** color of inner circle when menu expanded **/
+    /**
+     * color of inner circle when menu expanded *
+     */
     private int primaryDarkColor;
-
     /**
      * center of circle
      */
@@ -60,40 +75,39 @@ public class FilterMenuLayout extends ViewGroup {
     private int state = STATE_COLLAPSE;
     private Paint primaryPaint;
     private Paint primaryDarkPaint;
-
     private OvalOutline outlineProvider;
-    /**the expanded circle bounds**/
+    /**
+     * the expanded circle bounds*
+     */
     private Rect menuBounds;
     /**
      * set the circle position, base on its center , the menu will auto align.You should only set two directions at most.
      */
     private int centerLeft, centerRight, centerTop, centerBottom;
-    /** If true, centers the circle horizontally. */
+    /**
+     * If true, centers the circle horizontally.
+     */
     private boolean centerHorizontal;
-    /** If true, centers the circle vertically. **/
+    /**
+     * If true, centers the circle vertically. *
+     */
     private boolean centerVertical;
-
-    /** all intersect points **/
+    /**
+     * all intersect points *
+     */
     private List<Point> intersectPoints = new ArrayList<>();
-
-    /** expand progress **/
+    /**
+     * expand progress *
+     */
     private float expandProgress = 0;
     /**
      * the center drawable
      * TODO: add more drawable
      */
     private FilterMenuDrawable drawable;
-
     private ObjectAnimator circleAnimator;
     private ValueAnimator colorAnimator;
-
-    /** menu items position start angle**/
-    double fromAngle;
-    /** menu items position end angle **/
-    double toAngle;
-
     private FilterMenu menu;
-
 
     public FilterMenuLayout(Context context) {
         super(context);
@@ -116,6 +130,121 @@ public class FilterMenuLayout extends ViewGroup {
         init(context, attrs);
     }
 
+    /**
+     * calculate arc angle between point a and point b
+     *
+     * @param center
+     * @param a
+     * @param b
+     * @param area
+     * @param radius
+     * @return
+     */
+    private static double arcAngle(Point center, Point a, Point b, Rect area, int radius) {
+        double angle = threePointsAngle(center, a, b);
+        Point innerPoint = findMidnormalPoint(center, a, b, area, radius);
+        Point midInsectPoint = new Point((a.x + b.x) / 2, (a.y + b.y) / 2);
+        double distance = pointsDistance(midInsectPoint, innerPoint);
+        if (distance > radius) {
+            return 360 - angle;
+        }
+        return angle;
+    }
+
+    /**
+     * find the middle point of two intersect points in circle,only one point will be correct
+     *
+     * @param center
+     * @param a
+     * @param b
+     * @param area
+     * @param radius
+     * @return
+     */
+    private static Point findMidnormalPoint(Point center, Point a, Point b, Rect area, int radius) {
+        if (a.y == b.y) {
+            //top
+            if (a.y < center.y) {
+                return new Point((a.x + b.x) / 2, center.y + radius);
+            }
+            //bottom
+            return new Point((a.x + b.x) / 2, center.y - radius);
+        }
+        if (a.x == b.x) {
+            //left
+            if (a.x < center.x) {
+                return new Point(center.x + radius, (a.y + b.y) / 2);
+            }
+            //right
+            return new Point(center.x - radius, (a.y + b.y) / 2);
+        }
+        //slope of line ab
+        double abSlope = (a.y - b.y) / (a.x - b.x * 1.0);
+        //slope of midnormal
+        double midnormalSlope = -1.0 / abSlope;
+
+        double radian = Math.tan(midnormalSlope);
+        int dy = (int) (radius * Math.sin(radian));
+        int dx = (int) (radius * Math.cos(radian));
+        Point point = new Point(center.x + dx, center.y + dy);
+        if (!inArea(point, area, 0)) {
+            point = new Point(center.x - dx, center.y - dy);
+        }
+        return point;
+    }
+
+    private static double pointAngleOnCircle(Point center, Point point, Point coor) {
+        double angle = threePointsAngle(center, point, coor);
+        if (point.y < center.y) {
+            angle = 360 - angle;
+        }
+        return angle;
+    }
+
+    /**
+     * judge if an point in the area or not
+     *
+     * @param point
+     * @param area
+     * @param offsetRatio
+     * @return
+     */
+    public static boolean inArea(Point point, Rect area, float offsetRatio) {
+        int offset = (int) (area.width() * offsetRatio);
+        return point.x >= area.left - offset && point.x <= area.right + offset &&
+                point.y >= area.top - offset && point.y <= area.bottom + offset;
+    }
+
+    /**
+     * calculate the  point a's angle of rectangle consist of point a,point b, point c;
+     *
+     * @param vertex
+     * @param A
+     * @param B
+     * @return
+     */
+    private static double threePointsAngle(Point vertex, Point A, Point B) {
+        double b = pointsDistance(vertex, A);
+        double c = pointsDistance(A, B);
+        double a = pointsDistance(B, vertex);
+
+        return Math.toDegrees(Math.acos((a * a + b * b - c * c) / (2 * a * b)));
+
+    }
+
+    /**
+     * calculate distance of two points
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    private static double pointsDistance(Point a, Point b) {
+        int dx = b.x - a.x;
+        int dy = b.y - a.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
     private void init(Context ctx, AttributeSet attrs) {
         float density = getResources().getDisplayMetrics().density;
         TypedArray ta = ctx.obtainStyledAttributes(attrs, R.styleable.FilterMenuLayout);
@@ -136,16 +265,16 @@ public class FilterMenuLayout extends ViewGroup {
         primaryDarkColor = ta.getColor(R.styleable.FilterMenuLayout_primaryDarkColor, getResources().getColor(android.R.color.holo_blue_dark));
         ta.recycle();
 
-        if(!centerHorizontal){
-            centerLeft = centerLeft!=0 && centerLeft<collapsedRadius ? collapsedRadius : centerLeft;
-            centerRight = centerRight!=0 && centerRight<collapsedRadius ? collapsedRadius : centerRight;
+        if (!centerHorizontal) {
+            centerLeft = centerLeft != 0 && centerLeft < collapsedRadius ? collapsedRadius : centerLeft;
+            centerRight = centerRight != 0 && centerRight < collapsedRadius ? collapsedRadius : centerRight;
             if (centerLeft == 0 && centerRight == 0) {
                 centerLeft = collapsedRadius;
             }
         }
-        if(!centerVertical){
-            centerTop = centerTop!=0 && centerTop<collapsedRadius ? collapsedRadius : centerTop;
-            centerBottom = centerBottom!=0 && centerBottom<collapsedRadius ? collapsedRadius : centerBottom;
+        if (!centerVertical) {
+            centerTop = centerTop != 0 && centerTop < collapsedRadius ? collapsedRadius : centerTop;
+            centerBottom = centerBottom != 0 && centerBottom < collapsedRadius ? collapsedRadius : centerBottom;
             if (centerTop == 0 && centerBottom == 0) {
                 centerTop = collapsedRadius;
             }
@@ -189,7 +318,7 @@ public class FilterMenuLayout extends ViewGroup {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        if(getChildCount()>0){
+        if (getChildCount() > 0) {
             throw new IllegalStateException("should not add any child view to FilterMenuLayout ");
         }
     }
@@ -198,39 +327,39 @@ public class FilterMenuLayout extends ViewGroup {
         return expandProgress;
     }
 
-    @Override
-    protected void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
     public void setExpandProgress(float progress) {
         this.expandProgress = progress;
         primaryPaint.setAlpha(Math.min(255, (int) (progress * 255)));
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             invalidateOutline();
         }
         drawable.setExpandProgress(progress);
         invalidate();
     }
 
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
     void collapse(boolean animate) {
         state = STATE_COLLAPSE;
-        for(int i=0; i<getChildCount(); i++){
+        for (int i = 0; i < getChildCount(); i++) {
             getChildAt(i).setVisibility(View.GONE);
         }
         invalidate();
-        if(animate){
+        if (animate) {
             startCollapseAnimation();
         }
-        if(menu!=null && menu.getListener()!=null){
+        if (menu != null && menu.getListener() != null) {
             menu.getListener().onMenuCollapse();
         }
     }
 
     void expand(boolean animate) {
         state = STATE_EXPAND;
-        for(int i=0; i<getChildCount(); i++){
+        for (int i = 0; i < getChildCount(); i++) {
             getChildAt(i).setVisibility(View.VISIBLE);
         }
         invalidate();
@@ -239,14 +368,15 @@ public class FilterMenuLayout extends ViewGroup {
         } else {
             setItemsAlpha(1f);
         }
-        if(menu!=null && menu.getListener()!=null){
+        if (menu != null && menu.getListener() != null) {
             menu.getListener().onMenuExpand();
         }
     }
+
     void toggle(boolean animate) {
-        if (state== STATE_COLLAPSE) {
+        if (state == STATE_COLLAPSE) {
             expand(animate);
-        } else if (state== STATE_EXPAND) {
+        } else if (state == STATE_EXPAND) {
             collapse(animate);
         }
     }
@@ -269,7 +399,7 @@ public class FilterMenuLayout extends ViewGroup {
 
     @Override
     protected boolean verifyDrawable(Drawable who) {
-        return who==drawable || super.verifyDrawable(who);
+        return who == drawable || super.verifyDrawable(who);
     }
 
     @Override
@@ -292,43 +422,40 @@ public class FilterMenuLayout extends ViewGroup {
         }
 
     }
-    Point touchPoint = new Point();
-    boolean inChild = false;
-    FilterMenu.Item touchedItem;
-    boolean isExpand = false;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         touchPoint.set((int) event.getX(), (int) event.getY());
         int action = event.getActionMasked();
-        switch (action){
+        switch (action) {
             case MotionEvent.ACTION_DOWN: {
                 isExpand = false;
                 double distance = pointsDistance(touchPoint, center);
-                if(distance > (collapsedRadius+(expandedRadius-collapsedRadius)*expandProgress)){
-                    if(state == STATE_EXPAND){
+                if (distance > (collapsedRadius + (expandedRadius - collapsedRadius) * expandProgress)) {
+                    if (state == STATE_EXPAND) {
                         collapse(true);
                         return true;
                     }
                     return false;
-                }else{
-                    if(state==STATE_COLLAPSE){
+                } else {
+                    if (state == STATE_COLLAPSE) {
                         expand(true);
                         isExpand = true;
                     }
                     return true;
                 }
             }
-            case MotionEvent.ACTION_MOVE:{
-                if(inChild){
-                    if(!inArea(touchPoint, touchedItem.getBounds(), .2f)){
+            case MotionEvent.ACTION_MOVE: {
+                if (inChild) {
+                    if (!inArea(touchPoint, touchedItem.getBounds(), .2f)) {
                         touchedItem.getView().setPressed(false);
                         inChild = false;
                     }
-                }else{
+                } else {
                     for (int i = 0; i < getChildCount(); i++) {
                         View child = getChildAt(i);
                         FilterMenu.Item item = (FilterMenu.Item) getChildAt(i).getTag();
-                        if(inArea(touchPoint, item.getBounds(), .2f)){
+                        if (inArea(touchPoint, item.getBounds(), .2f)) {
                             touchedItem = item;
                             inChild = true;
                             child.dispatchTouchEvent(event);
@@ -340,9 +467,9 @@ public class FilterMenuLayout extends ViewGroup {
                 break;
             }
             case MotionEvent.ACTION_UP: {
-                if(inChild){
-                    if(menu!=null){
-                        if(menu.getListener()!=null) {
+                if (inChild) {
+                    if (menu != null) {
+                        if (menu.getListener() != null) {
                             collapse(true);
                             menu.getListener().onMenuItemClick(touchedItem.getView(), touchedItem.getPosition());
                         }
@@ -350,12 +477,12 @@ public class FilterMenuLayout extends ViewGroup {
                     touchedItem.getView().setPressed(false);
                     inChild = false;
                 }
-                if(!isExpand){
+                if (!isExpand) {
                     collapse(true);
                     return true;
                 }
                 double distance = pointsDistance(touchPoint, center);
-                if(distance > (collapsedRadius+(expandedRadius-collapsedRadius)*expandProgress)){
+                if (distance > (collapsedRadius + (expandedRadius - collapsedRadius) * expandProgress)) {
                     collapse(true);
                     return true;
                 }
@@ -380,19 +507,19 @@ public class FilterMenuLayout extends ViewGroup {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        Log.d(TAG, "onSizeChanged: "+w + ", " + h);
+        Log.d(TAG, "onSizeChanged: " + w + ", " + h);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setOutlineProvider(outlineProvider);
         }
         int x, y;
-        if(centerHorizontal) {
-            x = w/2 + centerLeft - centerRight;
-        }else{
+        if (centerHorizontal) {
+            x = w / 2 + centerLeft - centerRight;
+        } else {
             x = centerLeft != 0 ? centerLeft : w - centerRight;
         }
-        if(centerVertical){
-            y = h/2 + centerTop - centerBottom;
-        }else{
+        if (centerVertical) {
+            y = h / 2 + centerTop - centerBottom;
+        } else {
             y = centerTop != 0 ? centerTop : h - centerBottom;
         }
         center.set(x, y);
@@ -423,7 +550,6 @@ public class FilterMenuLayout extends ViewGroup {
         drawable.draw(canvas);
     }
 
-
     void startExpandAnimation() {
         //animate circle
         circleAnimator.setFloatValues(getExpandProgress(), 1f);
@@ -448,18 +574,19 @@ public class FilterMenuLayout extends ViewGroup {
             delay += DURATION_BETWEEN_ITEM;
         }
     }
+
     void startCollapseAnimation() {
         //animate circle
         circleAnimator.setFloatValues(getExpandProgress(), 0f);
         circleAnimator.start();
 
         //animate color
-        colorAnimator.setObjectValues(colorAnimator.getAnimatedValue()==null ? primaryDarkColor : colorAnimator.getAnimatedValue(), primaryColor);
+        colorAnimator.setObjectValues(colorAnimator.getAnimatedValue() == null ? primaryDarkColor : colorAnimator.getAnimatedValue(), primaryColor);
         colorAnimator.start();
 
         //animate menu item
         int delay = DURATION_BETWEEN_ITEM;
-        for (int i = getChildCount()-1; i >= 0; i--) {
+        for (int i = getChildCount() - 1; i >= 0; i--) {
             getChildAt(i).animate()
                     .setStartDelay(delay)
                     .setDuration(DURATION)
@@ -498,13 +625,12 @@ public class FilterMenuLayout extends ViewGroup {
 
         for (int i = 0; i < getChildCount(); i++) {
             float[] coords = new float[2];
-            measure.getPosTan(i * divider + divider*.5f, coords, null);
+            measure.getPosTan(i * divider + divider * .5f, coords, null);
             FilterMenu.Item item = (FilterMenu.Item) getChildAt(i).getTag();
             item.setX((int) coords[0] - item.getView().getMeasuredWidth() / 2);
             item.setY((int) coords[1] - item.getView().getMeasuredHeight() / 2);
         }
     }
-
 
     /**
      * find all intersect points, and calculate menu items display area;
@@ -577,19 +703,19 @@ public class FilterMenuLayout extends ViewGroup {
 
             //if the arc(a->midnormalPoint->b) is in menuBounds and the angle is bigger, select it
             int pointerIndex = i;
-            int endIndex = indexA+1;
-            if(!isClockwise(center, a, midnormalPoint)){
+            int endIndex = indexA + 1;
+            if (!isClockwise(center, a, midnormalPoint)) {
                 int tmpIndex = pointerIndex;
                 pointerIndex = endIndex;
                 endIndex = tmpIndex;
             }
-            if(pointerIndex==intersectPoints.size()-1){
+            if (pointerIndex == intersectPoints.size() - 1) {
                 pointerIndex = 0;
-            }else{
+            } else {
                 pointerIndex++;
             }
 
-            if(pointerIndex==endIndex && angle > maxAngle){
+            if (pointerIndex == endIndex && angle > maxAngle) {
                 indexA = i;
                 maxAngle = angle;
             }
@@ -600,7 +726,7 @@ public class FilterMenuLayout extends ViewGroup {
         Point midnormalPoint = findMidnormalPoint(center, a, b, menuBounds, expandedRadius);
 
         Point x = new Point(menuBounds.right, center.y);
-        if(!isClockwise(center, a, midnormalPoint)){
+        if (!isClockwise(center, a, midnormalPoint)) {
             Point tmp = a;
             a = b;
             b = tmp;
@@ -608,129 +734,20 @@ public class FilterMenuLayout extends ViewGroup {
 
         fromAngle = pointAngleOnCircle(center, a, x);
         toAngle = pointAngleOnCircle(center, b, x);
-        toAngle = toAngle <= fromAngle ? 360+toAngle : toAngle;
+        toAngle = toAngle <= fromAngle ? 360 + toAngle : toAngle;
     }
 
     /**
      * judge a->b is ordered clockwise
+     *
      * @param center
      * @param a
      * @param b
      * @return
      */
-    private boolean isClockwise(Point center, Point a, Point b){
-        double cross = (a.x-center.x)*(b.y-center.y)-(b.x-center.x)*(a.y-center.y);
-        return cross>0;
-    }
-
-    /**
-     * calculate arc angle between point a and point b
-     * @param center
-     * @param a
-     * @param b
-     * @param area
-     * @param radius
-     * @return
-     */
-    private static double arcAngle(Point center, Point a, Point b, Rect area, int radius){
-        double angle = threePointsAngle(center, a, b);
-        Point innerPoint = findMidnormalPoint(center, a, b, area, radius);
-        Point midInsectPoint = new Point((a.x+b.x)/2, (a.y+b.y)/2);
-        double distance = pointsDistance(midInsectPoint, innerPoint);
-        if(distance>radius){
-            return 360 - angle;
-        }
-        return angle;
-    }
-
-    /**
-     * find the middle point of two intersect points in circle,only one point will be correct
-     * @param center
-     * @param a
-     * @param b
-     * @param area
-     * @param radius
-     * @return
-     */
-    private static Point findMidnormalPoint(Point center, Point a, Point b, Rect area, int radius){
-        if(a.y==b.y){
-            //top
-            if(a.y<center.y){
-                return new Point((a.x+b.x)/2, center.y+radius);
-            }
-            //bottom
-            return new Point((a.x+b.x)/2, center.y-radius);
-        }
-        if(a.x==b.x){
-            //left
-            if(a.x<center.x){
-                return new Point(center.x+radius, (a.y+b.y)/2);
-            }
-            //right
-            return new Point(center.x-radius, (a.y+b.y)/2);
-        }
-        //slope of line ab
-        double abSlope =(a.y-b.y) / (a.x-b.x*1.0);
-        //slope of midnormal
-        double midnormalSlope = -1.0 / abSlope;
-
-        double radian = Math.tan(midnormalSlope);
-        int dy = (int) (radius * Math.sin(radian));
-        int dx = (int) (radius * Math.cos(radian));
-        Point point = new Point(center.x+dx, center.y+dy);
-        if(!inArea(point, area, 0)){
-            point = new Point(center.x-dx, center.y-dy);
-        }
-        return point;
-    }
-
-    private static double pointAngleOnCircle(Point center,  Point point, Point coor) {
-        double angle = threePointsAngle(center, point, coor);
-        if(point.y<center.y){
-            angle = 360-angle;
-        }
-        return angle;
-    }
-
-    /**
-     * judge if an point in the area or not
-     * @param point
-     * @param area
-     * @param offsetRatio
-     * @return
-     */
-    public static boolean inArea(Point point, Rect area, float offsetRatio){
-        int offset = (int) (area.width()*offsetRatio);
-        return point.x>=area.left-offset && point.x<=area.right+offset &&
-               point.y>=area.top-offset && point.y<=area.bottom+offset;
-    }
-
-    /**
-     * calculate the  point a's angle of rectangle consist of point a,point b, point c;
-     * @param vertex
-     * @param A
-     * @param B
-     * @return
-     */
-    private static double threePointsAngle(Point vertex, Point A, Point B) {
-        double b = pointsDistance(vertex, A);
-        double c = pointsDistance(A, B);
-        double a = pointsDistance(B, vertex);
-
-        return Math.toDegrees(Math.acos((a * a + b * b - c * c) / (2 * a * b)));
-
-    }
-
-    /**
-     * calculate distance of two points
-     * @param a
-     * @param b
-     * @return
-     */
-    private static double pointsDistance(Point a, Point b) {
-        int dx = b.x - a.x;
-        int dy = b.y - a.y;
-        return Math.sqrt(dx * dx + dy * dy);
+    private boolean isClockwise(Point center, Point a, Point b) {
+        double cross = (a.x - center.x) * (b.y - center.y) - (b.x - center.x) * (a.y - center.y);
+        return cross > 0;
     }
 
     public int getState() {
@@ -751,9 +768,9 @@ public class FilterMenuLayout extends ViewGroup {
         this.setPrimaryDarkColor(ss.primaryDarkColor);
         this.setCollapsedRadius(ss.collapsedRadius);
         this.setExpandedRadius(ss.expandedRadius);
-        if(ss.state == STATE_COLLAPSE){
+        if (ss.state == STATE_COLLAPSE) {
             collapse(false);
-        }else {
+        } else {
             expand(false);
         }
     }
@@ -776,6 +793,11 @@ public class FilterMenuLayout extends ViewGroup {
         return expandedRadius;
     }
 
+    public void setExpandedRadius(int expandedRadius) {
+        this.expandedRadius = expandedRadius;
+        requestLayout();
+    }
+
     public int getCollapsedRadius() {
         return collapsedRadius;
     }
@@ -785,9 +807,8 @@ public class FilterMenuLayout extends ViewGroup {
         requestLayout();
     }
 
-    public void setExpandedRadius(int expandedRadius) {
-        this.expandedRadius = expandedRadius;
-        requestLayout();
+    public int getPrimaryColor() {
+        return primaryColor;
     }
 
     public void setPrimaryColor(int color) {
@@ -796,21 +817,27 @@ public class FilterMenuLayout extends ViewGroup {
         invalidate();
     }
 
+    public int getPrimaryDarkColor() {
+        return primaryDarkColor;
+    }
+
     public void setPrimaryDarkColor(int color) {
         this.primaryDarkColor = color;
         primaryDarkPaint.setColor(color);
         invalidate();
     }
-    public int getPrimaryColor() {
-        return primaryColor;
-    }
 
-    public int getPrimaryDarkColor() {
-        return primaryDarkColor;
-    }
+    static class SavedState extends BaseSavedState {
 
-    static class SavedState extends BaseSavedState{
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel source) {
+                return new SavedState(source);
+            }
 
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
         public float expandProgress;
         public int primaryColor;
         public int primaryDarkColor;
@@ -820,6 +847,16 @@ public class FilterMenuLayout extends ViewGroup {
 
         public SavedState(Parcelable superState) {
             super(superState);
+        }
+
+        private SavedState(Parcel in) {
+            super(in);
+            this.expandProgress = in.readFloat();
+            this.primaryColor = in.readInt();
+            this.primaryDarkColor = in.readInt();
+            this.collapsedRadius = in.readInt();
+            this.expandedRadius = in.readInt();
+            this.state = in.readInt();
         }
 
         @Override
@@ -837,26 +874,6 @@ public class FilterMenuLayout extends ViewGroup {
             dest.writeInt(this.state);
         }
 
-        private SavedState(Parcel in) {
-            super(in);
-            this.expandProgress = in.readFloat();
-            this.primaryColor = in.readInt();
-            this.primaryDarkColor = in.readInt();
-            this.collapsedRadius = in.readInt();
-            this.expandedRadius = in.readInt();
-            this.state = in.readInt();
-        }
-
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
-            public SavedState createFromParcel(Parcel source) {
-                return new SavedState(source);
-            }
-
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
-
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -867,7 +884,7 @@ public class FilterMenuLayout extends ViewGroup {
 
         @Override
         public void getOutline(View view, Outline outline) {
-            int radius = (int) (collapsedRadius + (expandedRadius-collapsedRadius)*expandProgress);
+            int radius = (int) (collapsedRadius + (expandedRadius - collapsedRadius) * expandProgress);
             Rect area = new Rect(
                     center.x - radius,
                     center.y - radius,
@@ -876,7 +893,6 @@ public class FilterMenuLayout extends ViewGroup {
             outline.setRoundRect(area, radius);
         }
     }
-
 
 
 }

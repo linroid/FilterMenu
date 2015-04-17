@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
@@ -41,24 +42,7 @@ public class MainActivity extends ActionBarActivity {
                 .addItem(R.drawable.ic_action_io)
                 .addItem(R.drawable.ic_action_location_2)
                 .attach(layout)
-                .withListener(new FilterMenu.OnMenuChangeListener() {
-                    @DebugLog
-                    @Override
-                    public void onMenuItemClick(View view, int position) {
-                    }
-
-                    @DebugLog
-                    @Override
-                    public void onMenuCollapse() {
-
-                    }
-
-                    @DebugLog
-                    @Override
-                    public void onMenuExpand() {
-
-                    }
-                })
+                .withListener(listener)
                 .build();
     }
     private FilterMenu attachMenu2(FilterMenuLayout layout){
@@ -68,6 +52,7 @@ public class MainActivity extends ActionBarActivity {
                 .addItem(R.drawable.ic_action_info)
                 .addItem(R.drawable.ic_action_location_2)
                 .attach(layout)
+                .withListener(listener)
                 .build();
     }
     private FilterMenu attachMenu3(FilterMenuLayout layout){
@@ -76,12 +61,14 @@ public class MainActivity extends ActionBarActivity {
                 .addItem(R.drawable.ic_action_clock)
                 .addItem(R.drawable.ic_action_location_2)
                 .attach(layout)
+                .withListener(listener)
                 .build();
     }
     private FilterMenu attachMenu4(FilterMenuLayout layout){
         return new FilterMenu.Builder(this)
                 .inflate(R.menu.menu_filter)
                 .attach(layout)
+                .withListener(listener)
                 .build();
     }
 
@@ -110,4 +97,23 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    FilterMenu.OnMenuChangeListener listener = new FilterMenu.OnMenuChangeListener() {
+        @DebugLog
+        @Override
+        public void onMenuItemClick(View view, int position) {
+            Toast.makeText(MainActivity.this, "Touched position " + position, Toast.LENGTH_SHORT).show();
+        }
+
+        @DebugLog
+        @Override
+        public void onMenuCollapse() {
+
+        }
+
+        @DebugLog
+        @Override
+        public void onMenuExpand() {
+
+        }
+    };
 }
