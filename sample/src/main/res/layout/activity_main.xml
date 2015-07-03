@@ -9,13 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="8dp"
-        app:expandedRadius="96dp"
-        app:collapsedRadius="24dp"
-        app:centerHorizontal="true"
-        app:centerVertical="true"
-        app:centerLeft="30dp"
-        app:primaryColor="#ff636363"
-        app:primaryDarkColor="#ff292929">
+        app:fm_expandedRadius="96dp"
+        app:fm_collapsedRadius="24dp"
+        app:fm_centerHorizontal="true"
+        app:fm_centerVertical="true"
+        app:fm_centerLeft="30dp"
+        app:fm_primaryColor="#ff636363"
+        app:fm_primaryDarkColor="#ff292929">
     </com.linroid.filtermenu.library.FilterMenuLayout>
 
     <com.linroid.filtermenu.library.FilterMenuLayout
@@ -23,12 +23,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="8dp"
-        app:expandedRadius="96dp"
-        app:collapsedRadius="24dp"
-        app:centerTop="100dp"
-        app:centerLeft="48dp"
-        app:primaryColor="#ff3163"
-        app:primaryDarkColor="#ce3d68">
+        app:fm_expandedRadius="96dp"
+        app:fm_collapsedRadius="24dp"
+        app:fm_centerTop="100dp"
+        app:fm_centerLeft="48dp"
+        app:fm_primaryColor="#ff3163"
+        app:fm_primaryDarkColor="#ce3d68">
         </com.linroid.filtermenu.library.FilterMenuLayout>
 
     <com.linroid.filtermenu.library.FilterMenuLayout
@@ -36,12 +36,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="8dp"
-        app:expandedRadius="96dp"
-        app:collapsedRadius="24dp"
-        app:centerBottom="50dp"
-        app:centerRight="50dp"
-        app:primaryColor="#ff37aa4a"
-        app:primaryDarkColor="#ff20622b">
+        app:fm_expandedRadius="96dp"
+        app:fm_collapsedRadius="24dp"
+        app:fm_centerBottom="50dp"
+        app:fm_centerRight="50dp"
+        app:fm_primaryColor="#ff37aa4a"
+        app:fm_primaryDarkColor="#ff20622b">
     </com.linroid.filtermenu.library.FilterMenuLayout>
 
     <com.linroid.filtermenu.library.FilterMenuLayout
@@ -49,11 +49,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="8dp"
-        app:expandedRadius="96dp"
-        app:collapsedRadius="24dp"
-        app:centerBottom="50dp"
-        app:centerLeft="50dp"
-        app:primaryColor="#ff5791aa"
-        app:primaryDarkColor="#ff334862">
+        app:fm_expandedRadius="96dp"
+        app:fm_collapsedRadius="24dp"
+        app:fm_centerBottom="50dp"
+        app:fm_centerLeft="50dp"
+        app:fm_primaryColor="#ff5791aa"
+        app:fm_primaryDarkColor="#ff334862">
     </com.linroid.filtermenu.library.FilterMenuLayout>
 </FrameLayout>

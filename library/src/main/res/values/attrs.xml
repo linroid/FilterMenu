@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="FilterMenuLayout">
-        <attr name="primaryColor" format="color|reference"/>
-        <attr name="primaryDarkColor" format="color|reference"/>
-        <attr name="expandedRadius" format="dimension"/>
-        <attr name="collapsedRadius" format="dimension"/>
-        <attr name="centerLeft" format="dimension"/>
-        <attr name="centerRight" format="dimension"/>
-        <attr name="centerTop" format="dimension"/>
-        <attr name="centerHorizontal" format="boolean"/>
-        <attr name="centerVertical" format="boolean"/>
-        <attr name="centerBottom" format="dimension"/>
-        <attr name="sweepAngle" format="integer"/>
+        <attr name="fm_primaryColor" format="color|reference"/>
+        <attr name="fm_primaryDarkColor" format="color|reference"/>
+        <attr name="fm_expandedRadius" format="dimension"/>
+        <attr name="fm_collapsedRadius" format="dimension"/>
+        <attr name="fm_centerLeft" format="dimension"/>
+        <attr name="fm_centerRight" format="dimension"/>
+        <attr name="fm_centerTop" format="dimension"/>
+        <attr name="fm_centerHorizontal" format="boolean"/>
+        <attr name="fm_centerVertical" format="boolean"/>
+        <attr name="fm_centerBottom" format="dimension"/>
+        <attr name="fm_sweepAngle" format="integer"/>
     </declare-styleable>
 </resources>

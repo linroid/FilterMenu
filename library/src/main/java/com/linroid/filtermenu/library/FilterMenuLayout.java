@@ -250,19 +250,19 @@ public class FilterMenuLayout extends ViewGroup {
         TypedArray ta = ctx.obtainStyledAttributes(attrs, R.styleable.FilterMenuLayout);
         int defaultCollapsedRadius = (int) (65 / 2.f * density + 0.5);
         int defaultExpandedRadius = (int) (65 * 2 * density + 0.5);
-        collapsedRadius = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_collapsedRadius, defaultCollapsedRadius);
-        expandedRadius = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_expandedRadius, defaultExpandedRadius);
+        collapsedRadius = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_fm_collapsedRadius, defaultCollapsedRadius);
+        expandedRadius = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_fm_expandedRadius, defaultExpandedRadius);
 
 
-        centerLeft = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_centerLeft, 0);
-        centerRight = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_centerRight, 0);
-        centerTop = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_centerTop, 0);
-        centerBottom = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_centerBottom, 0);
-        centerHorizontal = ta.getBoolean(R.styleable.FilterMenuLayout_centerHorizontal, false);
-        centerVertical = ta.getBoolean(R.styleable.FilterMenuLayout_centerVertical, false);
+        centerLeft = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_fm_centerLeft, 0);
+        centerRight = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_fm_centerRight, 0);
+        centerTop = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_fm_centerTop, 0);
+        centerBottom = ta.getDimensionPixelSize(R.styleable.FilterMenuLayout_fm_centerBottom, 0);
+        centerHorizontal = ta.getBoolean(R.styleable.FilterMenuLayout_fm_centerHorizontal, false);
+        centerVertical = ta.getBoolean(R.styleable.FilterMenuLayout_fm_centerVertical, false);
 
-        primaryColor = ta.getColor(R.styleable.FilterMenuLayout_primaryColor, getResources().getColor(android.R.color.holo_blue_bright));
-        primaryDarkColor = ta.getColor(R.styleable.FilterMenuLayout_primaryDarkColor, getResources().getColor(android.R.color.holo_blue_dark));
+        primaryColor = ta.getColor(R.styleable.FilterMenuLayout_fm_primaryColor, getResources().getColor(android.R.color.holo_blue_bright));
+        primaryDarkColor = ta.getColor(R.styleable.FilterMenuLayout_fm_primaryDarkColor, getResources().getColor(android.R.color.holo_blue_dark));
         ta.recycle();
 
         if (!centerHorizontal) {

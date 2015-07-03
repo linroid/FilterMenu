@@ -42,30 +42,30 @@ This is a library project with a custom view that implements  concept of  Filter
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="8dp"
-        custom:expandedRadius="96dp"
-        custom:collapsedRadius="24dp"
-        custom:centerBottom="50dp"
-        custom:centerRight="50dp"
-        custom:primaryColor="#ff37aa4a"
-        custom:primaryDarkColor="#ff20622b">
+        custom:fm_expandedRadius="96dp"
+        custom:fm_collapsedRadius="24dp"
+        custom:fm_centerBottom="50dp"
+        custom:fm_centerRight="50dp"
+        custom:fm_primaryColor="#ff37aa4a"
+        custom:fm_primaryDarkColor="#ff20622b">
     </com.linroid.filtermenu.library.FilterMenuLayout>
     
     
     <!--circle radius size when menu expanded-->
-    custom:expandedRadius 
+    custom:fm_expandedRadius
     <!--circle radius size when menu collapsed-->
-    custom:collapsedRadius
+    custom:fm_collapsedRadius
     <!--set the position of circle, the menu will auto align.
         You should only set two directions at most.-->
-    custom:center[Left|Top|Right|Bottom]
+    custom:fm_center[Left|Top|Right|Bottom]
     <!-- If true, centers the circle horizontally.-->
-    custom:centerHorizontal
-    <!-- If true, centers the circlevertically.-->
-    custom:centerVertical
+    custom:fm_centerHorizontal
+    <!-- If true, centers the circle vertically.-->
+    custom:fm_centerVertical
     <!--primary color-->
-    custom:primaryColor
+    custom:fm_primaryColor
     <!--color of inner circle when menu expanded-->
-    custom:primaryDarkColor
+    custom:fm_primaryDarkColor
     ```
  - Initial menu items via java code
  
