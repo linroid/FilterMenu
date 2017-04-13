@@ -827,7 +827,7 @@ public class FilterMenuLayout extends ViewGroup {
         invalidate();
     }
 
-    static class SavedState extends BaseSavedState {
+    public static class SavedState extends BaseSavedState {
 
         public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
             public SavedState createFromParcel(Parcel source) {
